@@ -10,19 +10,17 @@
 
 <body>
     <?php
-    $a = 3;
-    $b = 213312;
-    $c = 3;
 
-    if ($a > $b && $a > $c) {
-        echo $a;
-    } elseif ($b > $c && $b > $a) {
-        echo $b;
-    } else {
-        echo $c;
+    foreach ($_SERVER as $valor) {
+        echo $valor;
+        echo "<br>";
+    }
+
+    foreach ($_SERVER as $key => $valor) {
+        echo $key , " = " , $valor , "</br>";
     }
     ?>
+
 </body>
 
 </html>
-
