@@ -24,7 +24,7 @@
                 echo "<tr style = 'background-color:olive'>";
             }
 
-            for ($j = 0; $j < 10; $j++) {
+            for ($j = 0; $j < 10; $j++) { // 
                 $cont++;
                 echo "<td>" . $cont . "</td>";
             }
