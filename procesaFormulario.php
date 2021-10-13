@@ -23,7 +23,7 @@
     echo "El usuario $usuario tiene la contrasenya $contrasenya";
 
     if (empty($usuario)) {
-        echo "EL usuario debe estar rellenado";
+        echo "El usuario debe estar rellenado";
     }
 
     if (empty($contrasenya)) {
