@@ -18,18 +18,23 @@ $errorDireccion = "";
 $errorInternet = "";
 $errorInstituto = "";
 $errorEstudios = "";
+$errorDias = "";
+$errorPreferencias = "";
 
 $name = "";
 $surname = "";
 $direccion = "";
 $internet = "";
-$estudios = "";
-$dias = "";
-
 $instituto = "";
 $estudios = "";
+$dias = "";
+$preferencias = "";
 
-function makeSafe($name, $surname, $direccion)
+$texto = "";
+
+
+
+function makeSafe($name, $surname, $direccion, $estudios, $texto)
 {
     $name = stripslashes($name);
     $name = strip_tags($name);
@@ -42,6 +47,14 @@ function makeSafe($name, $surname, $direccion)
     $direccion = stripslashes($direccion);
     $direccion = strip_tags($direccion);
     $direccion = htmlspecialchars($direccion);
+
+    $estudios = stripslashes($estudios);
+    $estudios = strip_tags($estudios);
+    $estudios = htmlspecialchars($estudios);
+
+    $texto = stripslashes($texto);
+    $texto = strip_tags($texto);
+    $texto = htmlspecialchars($texto);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -64,11 +77,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $direccion = $_POST["adress"];
     }
 
-    if (empty($_POST["internet"])) {
-        $errorInternet = "La conexión es obligatoria";
-    } else {
-        $internet = $_POST["internet"];
-    }
+    // if (isset($_POST["internet"])) {
+    //     $internet = $_POST["internet"]; //swapped
+    // } else {
+    //     $errorInternet = "La conexión es obligatoria";
+    // }
+
+    // if (isset($_POST['enviar'])) {
+    //     if(isset($_POST['internet']))
+    //     {
+    //         echo "You have selected :".$_POST['internet'];  //  Displaying Selected Value
+    //     }
+    // }
 
     if (empty($_POST["instituto"])) {
         $errorInstituto = "El instituto es un campo obligatorio";
@@ -88,20 +108,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $estudios = $_POST["estudios"];
     }
 
-    if(isset($_POST["dias"])){
+    if (isset($_POST["dias"])) {
         echo "Campos de SELECT Multiple - OK:";
         /*
         Es un array como los checkbox, y  funciona exactamente igual.
         */
-        foreach($_POST["dias"] as $valorSelectMultiple){
-            echo " ".$valorSelectMultiple;
+        foreach ($_POST["dias"] as $valorSelectMultiple) {
+            echo " " . $valorSelectMultiple;
         }
         echo "<br/>";
-    }else{
+    } else {
         echo "Ninguno de las 3 opciones de la lista han sido seleccionadas.";
     }
 
-}
+// deeeeeeeeeeeeeeeeeeeeeeeeeee
+
+
+
+
+} //server
+
+
 
 // <input type="text" name="usuario" value="<?php echo $usuario; 
 ?>
@@ -125,17 +152,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="adress" id="adress" name="adress" value="<?php echo $direccion; ?>">
             <span style="color:red">*<?php echo $errorDireccion; ?></span><br><br>
 
-
-            <!-- divisor borrar -->
-
             <input type="radio" id="wifi" name="internet" value="wifi"> <label for="Wifi">Wifi</label>
-            <!-- <?php if ($internet == "wifi") echo "checked"; ?> -->
-
             <input type="radio" id="cable" name="internet" value="cable"> <label for="Cable">Cable</label>
-            <!-- <?php if ($internet == "cable") echo "checked"; ?> -->
-
             <input type="radio" id="fibra" name="internet" value="fibra"><label for="fibra">Fibra</label>
-            <!-- <?php if ($internet == "fibra") echo "checked"; ?> -->
 
             <span style="color:red">*<?php echo $errorInternet; ?></span><br><br>
 
@@ -158,11 +177,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <fieldset>
             <legend>Preferencias:</legend>
-            <input type="checkbox" id="prefe1" name="prefe1" value="Historia"><label for="prefe1"> Historia</label>
-            <input type="checkbox" id="prefe2" name="prefe2" value="Geografía"><label for="prefe2"> Geografía</label>
-            <input type="checkbox" id="prefe3" name="prefe3" value="Lengua"><label for="prefe3"> Lengua</label>
-            <input type="checkbox" id="prefe4" name="prefe4" value="Matemáticas"><label for="prefe4"> Matemáticas</label>
+            <input type="checkbox" id="prefe1" name="checkboxes[]" value="1"> Historia</label>
+            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
+
+            <input type="checkbox" id="prefe2" name="checkboxes[]" value="2"> Geografía</label>
+            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
+
+            <input type="checkbox" id="prefe3" name="checkboxes[]" value="Lengua"><label for="prefe3"> Lengua</label>
+            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
+
+            <input type="checkbox" id="prefe4" name="checkboxes[]" value="Matemáticas"><label for="prefe4"> Matemáticas</label>
+            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
+
             <br>
+            <!-- todo: Hacer seguro 3 -->
             <textarea rows="8" cols="40" placeholder="Inserte aqui el texto..."></textarea>
 
             <input type="submit" name="enviar" value="Aceptar" />
