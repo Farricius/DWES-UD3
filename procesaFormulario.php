@@ -13,6 +13,10 @@ $contrasenya="";
 $errorUsuario="";
 $errorContrasenya="";
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5c4cbcff182063aef3aa5e6602a6db9f422b8679
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if (empty($_POST["usuario"])){
