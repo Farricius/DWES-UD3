@@ -12,11 +12,13 @@
 
 <?php
 
+// DECLARACIÓN VARIABLES Y SEGURIDAD
 $errorName = "";
 $errorSurname = "";
 $errorDireccion = "";
 $errorInternet = "";
 $errorInstituto = "";
+$errorInstitutoRegex = "";
 $errorEstudios = "";
 $errorDias = "";
 $errorPreferencias = "";
@@ -29,33 +31,36 @@ $instituto = "";
 $estudios = "";
 $dias = "";
 $preferencias = "";
+$cajaTexto = "";
 
-$texto = "";
+// function makeSafe($name, $surname, $direccion, $estudios, $cajaTexto)
+// {
+//     $name = stripslashes($name);
+//     $name = strip_tags($name);
+//     $name = htmlspecialchars($name);
+//     $surname = stripslashes($surname);
+//     $surname = strip_tags($surname);
+//     $surname = htmlspecialchars($surname);
+//     $direccion = stripslashes($direccion);
+//     $direccion = strip_tags($direccion);
+//     $direccion = htmlspecialchars($direccion);
+//     $estudios = stripslashes($estudios);
+//     $estudios = strip_tags($estudios);
+//     $estudios = htmlspecialchars($estudios);
+//     $cajaTexto = stripslashes($cajaTexto);
+//     $cajaTexto = strip_tags($cajaTexto);
+//     $cajaTexto = htmlspecialchars($cajaTexto);
+// }
 
+// function makeSafe($variable)
+// {
+//     $variable = stripslashes($variable);
+//     $variable = strip_tags($variable);
+//     $variable = htmlspecialchars($variable);
+//     return $variable;
+// }
 
-
-function makeSafe($name, $surname, $direccion, $estudios, $texto)
-{
-    $name = stripslashes($name);
-    $name = strip_tags($name);
-    $name = htmlspecialchars($name);
-
-    $surname = stripslashes($surname);
-    $surname = strip_tags($surname);
-    $surname = htmlspecialchars($surname);
-
-    $direccion = stripslashes($direccion);
-    $direccion = strip_tags($direccion);
-    $direccion = htmlspecialchars($direccion);
-
-    $estudios = stripslashes($estudios);
-    $estudios = strip_tags($estudios);
-    $estudios = htmlspecialchars($estudios);
-
-    $texto = stripslashes($texto);
-    $texto = strip_tags($texto);
-    $texto = htmlspecialchars($texto);
-}
+// ENVIAR PROCESAR TODO
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -77,29 +82,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $direccion = $_POST["adress"];
     }
 
-    // if (isset($_POST["internet"])) {
-    //     $internet = $_POST["internet"]; //swapped
-    // } else {
-    //     $errorInternet = "La conexión es obligatoria";
-    // }
-
-    // if (isset($_POST['enviar'])) {
-    //     if(isset($_POST['internet']))
-    //     {
-    //         echo "You have selected :".$_POST['internet'];  //  Displaying Selected Value
-    //     }
-    // }
-
-    if (empty($_POST["instituto"])) {
-        $errorInstituto = "El instituto es un campo obligatorio";
+    if (isset($_POST["internet"])) {
+        foreach ($_POST["internet"] as $valorRadio) {
+            echo $valorRadio;
+        }
     } else {
-        $instituto = $_POST["instituto"];
+        $errorInternet = "Indique su conexión a Internet, por favor";
     }
 
-    if (!preg_match("/^IES/", $instituto)) {
-        $errorInstituto = "El instituto (obligatorio) debe empezar por patrón IES";
-    } else {
-        $instituto = $_POST["instituto"];
+    $instituto = ($_POST["instituto"]);
+
+    if (empty($instituto)) {
+        $errorInstituto = "Campo Obligatorio a rellenar";
+    } else if (!preg_match("/^IES/", $instituto)) {
+        $errorInstituto = "Error. Debe empezar por IES";
     }
 
     if (empty($_POST["estudios"])) {
@@ -109,32 +105,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST["dias"])) {
-        echo "Campos de SELECT Multiple - OK:";
-        /*
-        Es un array como los checkbox, y  funciona exactamente igual.
-        */
-        foreach ($_POST["dias"] as $valorSelectMultiple) {
-            echo " " . $valorSelectMultiple;
+        foreach ($_POST["dias"] as $valorDiasElegidos) {
+            echo $valorDiasElegidos;
         }
-        echo "<br/>";
     } else {
-        echo "Ninguno de las 3 opciones de la lista han sido seleccionadas.";
+        $errorDias = "Indique un día (mínimo), por favor";
     }
 
-// deeeeeeeeeeeeeeeeeeeeeeeeeee
+    if (isset($_POST["checkboxes"])) {
+        foreach ($_POST["checkboxes"] as $valorCheckboxMulti) {
+            echo $valorCheckboxMulti;
+        }
+    } else {
+        $errorPreferencias = "Indique sus preferencias, por favor";
+    }
+
+    $cajaTexto = $_POST["cajaTexto"];
+}
+
+//makeSafe($name, $surname, $direccion, $estudios, $cajaTexto);
 
 
-
-
-} //server
-
-
-
-// <input type="text" name="usuario" value="<?php echo $usuario; 
 ?>
 
 <body>
-
     <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="Post">
 
         <fieldset>
@@ -152,9 +146,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="adress" id="adress" name="adress" value="<?php echo $direccion; ?>">
             <span style="color:red">*<?php echo $errorDireccion; ?></span><br><br>
 
-            <input type="radio" id="wifi" name="internet" value="wifi"> <label for="Wifi">Wifi</label>
-            <input type="radio" id="cable" name="internet" value="cable"> <label for="Cable">Cable</label>
-            <input type="radio" id="fibra" name="internet" value="fibra"><label for="fibra">Fibra</label>
+            <input type="radio" id="wifi" name="internet[]" value="Wifi"> <label for="Wifi">Wifi</label>
+            <input type="radio" id="cable" name="internet[]" value="Cable"> <label for="Cable">Cable</label>
+            <input type="radio" id="fibra" name="internet[]" value="Fibra"><label for="fibra">Fibra</label>
 
             <span style="color:red">*<?php echo $errorInternet; ?></span><br><br>
 
@@ -173,25 +167,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="Jueves">Jueves</option>
                 <option value="Viernes">Viernes</option>
             </select>
+            <span style="color:red">*<?php echo $errorDias ?></span>
         </fieldset>
 
         <fieldset>
             <legend>Preferencias:</legend>
-            <input type="checkbox" id="prefe1" name="checkboxes[]" value="1"> Historia</label>
-            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
+            <input type="checkbox" name="checkboxes[]" value="Historia"> Historia</label>
+            <input type="checkbox" name="checkboxes[]" value="Geografía"> Geografía</label>
+            <input type="checkbox" name="checkboxes[]" value="Lengua"> Lengua</label>
+            <input type="checkbox" name="checkboxes[]" value="Matemáticas"> Matemáticas</label>
+            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br>
 
-            <input type="checkbox" id="prefe2" name="checkboxes[]" value="2"> Geografía</label>
-            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
-
-            <input type="checkbox" id="prefe3" name="checkboxes[]" value="Lengua"><label for="prefe3"> Lengua</label>
-            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
-
-            <input type="checkbox" id="prefe4" name="checkboxes[]" value="Matemáticas"><label for="prefe4"> Matemáticas</label>
-            <span style="color:red">*<?php echo $errorPreferencias; ?></span><br><br>
-
-            <br>
-            <!-- todo: Hacer seguro 3 -->
-            <textarea rows="8" cols="40" placeholder="Inserte aqui el texto..."></textarea>
+            <textarea name="cajaTexto" rows="8" cols="40" placeholder="Inserte aqui el texto..."></textarea>
 
             <input type="submit" name="enviar" value="Aceptar" />
             <input type="reset" name="cancelar" value="Cancelar" />
