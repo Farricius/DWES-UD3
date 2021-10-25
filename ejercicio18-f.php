@@ -22,6 +22,7 @@ function makeSafe($variable)
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     $poblacion = makeSafe($_POST["poblacion"]);
     if (empty($poblacion)) {
         $errorPoblacion = "Campo Obligatorio a rellenar";
